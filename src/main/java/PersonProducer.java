@@ -13,7 +13,7 @@ import java.util.*;
 import static org.apache.kafka.common.utils.Utils.sleep;
 
 
-public class JFairyProducer {
+public class PersonProducer {
     private final String topic_name = "person";
     private Person person;
     private final char DEFAULT_SEPARATOR = '|';
@@ -24,11 +24,11 @@ public class JFairyProducer {
     private Fairy fairy;
 
 
-    public JFairyProducer() {
+    public PersonProducer() {
         fairy = Fairy.create();
         this.type = "csv";
         props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, System.getenv("KAFKA_URL"));
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ProducerConfig.CLIENT_ID_CONFIG, topic_name);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
@@ -47,7 +47,7 @@ public class JFairyProducer {
             record = new ProducerRecord<Long, String>(topic_name, data);
             producer.send(record);
             System.out.println("Sent 1 person to topic " + topic_name + " with username: " + data.split("\\|")[0]);
-            sleep(1000);
+            sleep(5000);
         }
     }
 
@@ -67,7 +67,7 @@ public class JFairyProducer {
                 + person.getFirstName()             + DEFAULT_SEPARATOR //first name
                 + person.getLastName()              + DEFAULT_SEPARATOR //last name
                 + person.getDateOfBirth()           + DEFAULT_SEPARATOR //date of birth
-                + person.getCompany()               + DEFAULT_SEPARATOR //company
+                + person.getCompany().getName()     + DEFAULT_SEPARATOR //company
                 + person.getSex()                   + DEFAULT_SEPARATOR //sex
                 + person.getNationality().getCode() + DEFAULT_SEPARATOR //nationality
                 + person.getAge();                                      //age
